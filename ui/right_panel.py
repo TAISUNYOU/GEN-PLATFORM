@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QTabWidget,
     QLabel, QLineEdit, QGroupBox, QRadioButton, QButtonGroup,
     QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView, QMenu,
-    QPushButton, QSizePolicy
+    QPushButton, QSizePolicy, QMessageBox
 )
 from PyQt5.QtCore import Qt
 
@@ -123,6 +123,8 @@ class SettingTab(QWidget):
 class ExtractTab(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.genplatform_dir = None
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(12)
@@ -132,6 +134,7 @@ class ExtractTab(QWidget):
 
         self.extract_btn = QPushButton("EXTRACT")
         self.extract_btn.setFixedHeight(56)
+        self.extract_btn.clicked.connect(self._extract_cells)
         layout.addWidget(self.extract_btn)
 
     def _build_schematic_group(self) -> QGroupBox:
@@ -312,6 +315,62 @@ class ExtractTab(QWidget):
             sch_val    = (self.cell_table.item(row, 1) or QTableWidgetItem("")).text()
             lines.append(f"{layout_val} {sch_val}")
         Path(path).write_text("\n".join(lines), encoding="utf-8")
+
+    # ── Extract Logic ───────────────────────────────────────────────────────
+
+    def _validate_folder_paths(self) -> bool:
+        """Step 1: 폴더 경로 유효성검사 및 생성"""
+        try:
+            # 1. GENPLATFORM 경로 검증
+            if not self.genplatform_dir:
+                QMessageBox.warning(self, "Error", "GENPLATFORM DIRECTORY가 설정되지 않았습니다.")
+                return False
+
+            genplatform_path = Path(self.genplatform_dir)
+            if not genplatform_path.exists():
+                QMessageBox.warning(self, "Error", f"GENPLATFORM DIRECTORY가 존재하지 않습니다:\n{self.genplatform_dir}")
+                return False
+
+            # 2. CCL 폴더 생성 (없으면)
+            ccl_path = genplatform_path / "CCL"
+            ccl_path.mkdir(parents=True, exist_ok=True)
+
+            # 3. EXTRACT 폴더 생성 (없으면)
+            extract_path = ccl_path / "EXTRACT"
+            extract_path.mkdir(parents=True, exist_ok=True)
+
+            return True
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"폴더 검증 중 오류 발생:\n{str(e)}")
+            return False
+
+    def _process_schematic(self):
+        """Step 2: SCHEMATIC 입력처리"""
+        pass
+
+    def _process_layout(self):
+        """Step 3: LAYOUT 입력처리"""
+        pass
+
+    def _perform_extract(self):
+        """Step 4: SCHEMATIC, LAYOUT 입력 정보를 바탕으로 EXTRACT"""
+        pass
+
+    def _extract_cells(self):
+        """메인 Extract 함수"""
+        # Step 1: 폴더 경로 유효성검사
+        if not self._validate_folder_paths():
+            return
+
+        # Step 2: SCHEMATIC 입력처리
+        self._process_schematic()
+
+        # Step 3: LAYOUT 입력처리
+        self._process_layout()
+
+        # Step 4: EXTRACT 실행
+        self._perform_extract()
 
     def reset(self):
         self.radio_file.setChecked(True)
@@ -851,3 +910,6 @@ class RightPanel(QWidget):
         json_path = PROJECTS_DIR / f"{project_name}.json"
         if json_path.exists():
             self.setting_tab.load_project(json_path)
+            # ExtractTab에 GENPLATFORM DIRECTORY 전달
+            genplatform_dir = self.setting_tab.genplatform_dir.text().strip()
+            self.ccl_tab.extract_tab.genplatform_dir = genplatform_dir
