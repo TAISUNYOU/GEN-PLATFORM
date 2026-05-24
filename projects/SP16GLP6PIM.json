@@ -1,0 +1,18 @@
+{
+  "SETTING": {
+    "PROJECT": {
+      "simrc": "/library/sp16glp6pim/SCH/OPUS_ENV/.simrc",
+      "layout_library": "SP16GLP6PIM_LAY",
+      "schematic_library": "SP16GLP6PIM_SCH"
+    },
+    "LAS": {
+      "icv_rule": "pim_icv_rule",
+      "nxtgrd_file": "pim_nxtgrd_file",
+      "mapping_file": "pim_mapping_file"
+    },
+    "EXTRACT": {
+      "ccl": "XMCCL_",
+      "drv": "SLDRV PUMP"
+    }
+  }
+}

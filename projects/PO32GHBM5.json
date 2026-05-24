@@ -1,0 +1,18 @@
+{
+  "SETTING": {
+    "PROJECT": {
+      "simrc": "",
+      "layout_library": "",
+      "schematic_library": ""
+    },
+    "LAS": {
+      "icv_rule": "po32ghbm5_icv_rule",
+      "nxtgrd_file": "po32ghbm5_nxtgrd_file",
+      "mapping_file": "po32ghbm5_mapping_file"
+    },
+    "EXTRACT": {
+      "ccl": "XMCCL_",
+      "drv": "SLDRV PUMP"
+    }
+  }
+}

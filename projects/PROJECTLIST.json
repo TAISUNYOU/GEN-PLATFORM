@@ -1,0 +1,13 @@
+{
+    "CANOPUS" : {
+        "1" : "CP24GD5N.json"
+    },
+    "SPICA" : {
+        "1" : "SP32GLP6.json",
+        "2" : "SP16GLP6PIM.json"
+    },    
+    "PROCION" : {
+        "1" : "PO32GHBM5.json"
+    }
+
+}

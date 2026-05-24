@@ -1,0 +1,18 @@
+{
+  "SETTING": {
+    "PROJECT": {
+      "simrc": "/library/sp32gmd6/SCH/OPUS_ENV/.simrc",
+      "layout_library": "SP32GLPDDR6_LAY",
+      "schematic_library": "SP32GLPDDR6_SCH"
+    },
+    "LAS": {
+      "icv_rule": "sp32gmd6_icv_rule",
+      "nxtgrd_file": "sp32gmd6_nxtgrd_file",
+      "mapping_file": "sp32gmd6_mapping_file"
+    },
+    "EXTRACT": {
+      "ccl": "XMCCL_",
+      "drv": "SLDRV PUMP"
+    }
+  }
+}
