@@ -1,10 +1,11 @@
 """CCL (Closed Class Library) - Extract and Run 관련 함수들"""
 from pathlib import Path
+from typing import Tuple
 
 
 # ── CCL Extract Functions ───────────────────────────────────────────────────
 
-def validate_folder_paths(genplatform_dir: str) -> tuple[bool, str]:
+def validate_folder_paths(genplatform_dir: str) -> Tuple[bool, str]:
     """
     Step 1: 폴더 경로 유효성검사 및 생성
 
