@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt
 
+from func import func_ccl
+
 
 class ExtractTab(QWidget):
     def __init__(self, parent=None):
@@ -204,61 +206,22 @@ class ExtractTab(QWidget):
             lines.append(f"{layout_val} {sch_val}")
         Path(path).write_text("\n".join(lines), encoding="utf-8")
 
-    # ── Extract Logic ───────────────────────────────────────────────────────
-
-    def _validate_folder_paths(self) -> bool:
-        """Step 1: 폴더 경로 유효성검사 및 생성"""
-        try:
-            # 1. GENPLATFORM 경로 검증
-            if not self.genplatform_dir:
-                QMessageBox.warning(self, "Error", "GENPLATFORM DIRECTORY가 설정되지 않았습니다.")
-                return False
-
-            genplatform_path = Path(self.genplatform_dir)
-            if not genplatform_path.exists():
-                QMessageBox.warning(self, "Error", f"GENPLATFORM DIRECTORY가 존재하지 않습니다:\n{self.genplatform_dir}")
-                return False
-
-            # 2. CCL 폴더 생성 (없으면)
-            ccl_path = genplatform_path / "CCL"
-            ccl_path.mkdir(parents=True, exist_ok=True)
-
-            # 3. EXTRACT 폴더 생성 (없으면)
-            extract_path = ccl_path / "EXTRACT"
-            extract_path.mkdir(parents=True, exist_ok=True)
-
-            return True
-
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"폴더 검증 중 오류 발생:\n{str(e)}")
-            return False
-
-    def _process_schematic(self):
-        """Step 2: SCHEMATIC 입력처리"""
-        pass
-
-    def _process_layout(self):
-        """Step 3: LAYOUT 입력처리"""
-        pass
-
-    def _perform_extract(self):
-        """Step 4: SCHEMATIC, LAYOUT 입력 정보를 바탕으로 EXTRACT"""
-        pass
-
     def _extract_cells(self):
-        """메인 Extract 함수"""
+        """메인 Extract 콜백 함수"""
         # Step 1: 폴더 경로 유효성검사
-        if not self._validate_folder_paths():
+        success, message = func_ccl.validate_folder_paths(self.genplatform_dir)
+        if not success:
+            QMessageBox.warning(self, "Error", message)
             return
 
         # Step 2: SCHEMATIC 입력처리
-        self._process_schematic()
+        func_ccl.process_schematic()
 
         # Step 3: LAYOUT 입력처리
-        self._process_layout()
+        func_ccl.process_layout()
 
         # Step 4: EXTRACT 실행
-        self._perform_extract()
+        func_ccl.perform_extract()
 
     def reset(self):
         self.radio_file.setChecked(True)
@@ -459,7 +422,7 @@ class RunTab(QWidget):
         Path(path).write_text("\n".join(lines), encoding="utf-8")
 
     def _on_check_ccl(self):
-        pass
+        func_ccl.check_ccl()
 
     def reset(self):
         self.run_radio_auto.setChecked(True)
